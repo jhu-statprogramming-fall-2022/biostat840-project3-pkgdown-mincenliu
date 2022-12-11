@@ -1,4 +1,12 @@
 url: ~
 template:
   bootstrap: 5
+  bootswatch: minty
+  theme: ayu-mirage
+  bslib:
+    bg: "#202123"
+    fg: "#7393B3"
+    code-bg: "#FFD580"
+    heading_font: {google: "Capriola"}
+    base_font: {google: "Sniglet"}
 

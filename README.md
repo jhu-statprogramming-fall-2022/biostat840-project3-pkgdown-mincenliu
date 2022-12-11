@@ -1,4 +1,16 @@
 # omnibus
+## Information ##
+* The original R package came from: <https://github.com/adamlilith/omnibus>.
+* URL to the deployed website: <>.
+* Description of customization:
+	* I changed the overall appearance of my website with a theme from [Bootswatch](https://bootswatch.com/).
+	* I changed the background color to black and the text color to blue gray.
+	* I changed the highlighting in code blocks with "theme: ayu-mirage".
+	* I changed the background for the inline code to light orange.
+	* I changed the font for the headings.
+	* I changed the font for the majority of the text.
+
+## Description ##
 R Utility Functions for the 99%
 
 <img align="right" src="man/figures/omnibus.png" style="width:150px;height:150px;">
@@ -8,7 +20,9 @@ An assortment of helper functions for managing data (e.g., rotating values in ma
 ## Installation ##
 As of version 1.1.2, `omnibus` is on CRAN! You can install the latest CRAN-stable version it the normal way you install packages from CRAN, or the development version by using:
 
-`remotes::install_github('adamlilith/omnibus', dependencies=TRUE)`
+``` r
+remotes::install_github('adamlilith/omnibus', dependencies=TRUE)
+```
 
 You may need to install the `remotes` package first.
 
@@ -65,4 +79,8 @@ You may need to install the `remotes` package first.
 * `prefix`: Add repeating character to a string to ensure it has a user-defined length (e.g., `7` --> `007`).
 * `say`: Replacement for `print('abc'); flush.console()`.
 
-Adam
+## Example ##
+This is a basic example with the isLeapYear() function:
+``` r
+isLeapYear(2022)
+```

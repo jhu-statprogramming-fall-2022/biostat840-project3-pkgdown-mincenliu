@@ -11,6 +11,12 @@ Authors@R:
 			role = c('cre', 'aut'),
 			email = 'adam.smith@mobot.org',
 			comment = c(ORCID = '0000-0002-6420-1659')
+		),
+		person(
+			given = 'Mincen',
+			family = 'Liu',
+			role = 'aut',
+			email = 'mliu128@jhmi.edu'
 		)
 	)
 Maintainer: Adam B. Smith <adam.smith@mobot.org>
