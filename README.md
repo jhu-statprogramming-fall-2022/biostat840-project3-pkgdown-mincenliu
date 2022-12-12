@@ -1,7 +1,7 @@
 # omnibus
 ## Information ##
 * The original R package came from: <https://github.com/adamlilith/omnibus>.
-* URL to the deployed website: <>.
+* URL to the deployed website: <https://jhu-statprogramming-fall-2022.github.io/biostat840-project3-pkgdown-mincenliu/>.
 * Description of customization:
 	* I changed the overall appearance of my website with a theme from [Bootswatch](https://bootswatch.com/).
 	* I changed the background color to black and the text color to blue gray.
