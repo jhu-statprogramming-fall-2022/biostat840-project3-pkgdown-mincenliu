@@ -10,7 +10,9 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
 )
 ```
 
@@ -21,10 +23,11 @@ library(readr)
 library(dplyr)
 library(stringr)
 library(purrr)
+library(ggplot2)
 ```
 
 ### Question
-- This data analysis aims to explore the college tuition and pay and their relationship.
+- This data analysis aims to explore the college tuition and pay after graduation and their relationship.
 
 ### Original Data
 - The data originally came from the US Department of Education. I found the data on [TidyTuesday](https://www.tidytuesday.com) and the link to its GitHub repository is <https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-03-10>.
@@ -103,6 +106,16 @@ combined <- combined %>% slice(-ind2) %>% select(-state_name)
 combined
 ```
 
+```{r}
+combined %>% count(degree_length)
+```
+
+We keep only the 4-year schools.
+```{r}
+combined <- combined %>% filter(degree_length == "4 Year")
+combined
+```
+
 We want to find the modal value(s) for the percent of student body in STEM:
 ```{r}
 mmode(combined$stem_percent)
@@ -112,15 +125,44 @@ We can see that the modes are 0 and 7.
 
 ### Data Visualization
 - Plot 1
+```{r}
+combined %>% ggplot(aes(x = type, y = out_of_state_tuition)) +
+	geom_boxplot() + 
+	labs(title = "Out-of-state Tuition by School Type", 
+		 subtitle = "This is a box plot displaying the summary statistics for the out-of-state tuition by school type.\nWe can see that the first quartile of private school tuition is above the third quartile of the\npublic school tuition.", 
+		 caption = "Mincen Liu") +
+	xlab("school type") + ylab("out-of-state tuition in USD")
+```
 
+- Plot 2
+```{r}
+combined %>% ggplot(aes(x = out_of_state_tuition, y = mid_career_pay)) + 
+	geom_point() + 
+	facet_grid(type ~ .) + 
+	labs(title = "Mid Career Pay vs. Out-of-state Tuition by School Type", 
+		 subtitle = "This is a scatter plot showing the relationship between the mid career pay and the out-of-state\ntuition, faceted by school type. We see an overall positive relation in each school type.", 
+		 caption = "Mincen Liu") +
+	xlab("out-of-state tuition in USD") + ylab("mid career pay in USD")
+```
 
+- Plot 3
+```{r}
+combined %>% ggplot(aes(early_career_pay)) +
+	geom_density() +
+	labs(title = "Early Career Pay", 
+		 subtitle = "This is a density plot of the early career pay. We see a right-skewed distribution.", 
+		 caption = "Mincen Liu") +
+	xlab("early career pay in USD") + ylab("density")
+```
 
-
-
+### Interpretation
+- On average, private school out-of-state tuition is much higher than public school out-of-state tuition among the 4-year institutions.
+- We see an overall positive relation between the mid career pay and the out-of-state tuition in each school type.
+- The early career pay has a right-skewed distribution.
 
 ### List of Functions Used
-- `dplyr`: `glimpse()`, `inner_join()`, `select()`, `slice()`
+- `dplyr`: `glimpse()`, `inner_join()`, `select()`, `slice()`, `count()`, `filter()`
 - `stringr`: `str_equal()`, `str_replace()`
 - `purrr`: `map2()`, `pmap()`
-- `ggplot2`:
+- `ggplot2`: `geom_boxplot()`, `geom_point()`, `geom_density()`
 - `omnibus`: `naRows()`, `mmode()`
