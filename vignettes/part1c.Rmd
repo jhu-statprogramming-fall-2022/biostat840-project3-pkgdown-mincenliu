@@ -164,5 +164,5 @@ combined %>% ggplot(aes(early_career_pay)) +
 - `dplyr`: `glimpse()`, `inner_join()`, `select()`, `slice()`, `count()`, `filter()`
 - `stringr`: `str_equal()`, `str_replace()`
 - `purrr`: `map2()`, `pmap()`
-- `ggplot2`: `geom_boxplot()`, `geom_point()`, `geom_density()`
+- `ggplot2`: `geom_boxplot()`, `geom_point()`, `geom_density()`, `facet_grid()`
 - `omnibus`: `naRows()`, `mmode()`
