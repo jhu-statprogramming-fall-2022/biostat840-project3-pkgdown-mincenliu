@@ -1,0 +1,126 @@
+---
+title: "Example analysis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Example analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(omnibus)
+library(here)
+library(readr)
+library(dplyr)
+library(stringr)
+library(purrr)
+```
+
+### Question
+- This data analysis aims to explore the college tuition and pay and their relationship.
+
+### Original Data
+- The data originally came from the US Department of Education. I found the data on [TidyTuesday](https://www.tidytuesday.com) and the link to its GitHub repository is <https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-03-10>.
+- I use 2 datasets from this repository: tuition_cost.csv which contains the in-state and out-state tuition for each school and salary_potential.csv which contains early and mid career pay in USD for students in each school.
+
+### Data Dictionary
+- Data dictionaries are available here:
+<https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-03-10#tuition_costcsv>,
+<https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-03-10#salary_potentialcsv>.
+
+### Load Data
+```{r}
+# tests if a directory named "data" exists locally
+if(!dir.exists(here("data"))) { dir.create(here("data")) }
+
+if(!file.exists(here("data", "tuition_cost.RData")) | !file.exists(here("data", "salary_potential.RData"))){
+  tuition_cost <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-10/tuition_cost.csv')
+  salary_potential <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-10/salary_potential.csv')
+  
+  # save the files to RData objects
+  save(tuition_cost, file = here("data", "tuition_cost.RData"))
+  save(salary_potential, file = here("data", "salary_potential.RData"))
+}
+tuition_cost <- get(load(here("data", "tuition_cost.RData")))
+salary_potential <- get(load(here("data", "salary_potential.RData")))
+```
+
+```{r}
+glimpse(tuition_cost)
+```
+
+```{r}
+glimpse(salary_potential)
+```
+
+### Data Wrangling
+```{r}
+# We first combine the 2 data frames. We include only schools that are in both data frames.
+combined <- inner_join(tuition_cost, salary_potential, by = "name")
+```
+
+```{r}
+# Remove unwanted variables
+combined <- combined %>% select(-room_and_board, -in_state_total, -out_of_state_total, -rank, -make_world_better_percent)
+
+# Check if there's any NAs. If missing values exist, get the corresponding row numbers.
+naRows(combined)
+```
+
+Luckily, we don't have any missing values.
+
+```{r}
+# We want to check whether there's any discrepancy between the "state" variables from the 2 data frames.
+temp <- map2(.x = combined$state, .y = combined$state_name, .f = ~str_equal(.x, .y))
+
+# Save the index of not matched cases
+ind <- which(temp == FALSE)
+
+combined %>% slice(ind) %>% select(state, state_name)
+```
+
+From here, we see that it is possible that the difference in the 2 columns is caused by the dash in the values of "state_name". We're going to check that.
+
+```{r}
+# Replace "-" with " "
+combined$state_name <- str_replace(combined$state_name, "-", " ")
+temp2 <- pmap(list(x = combined$state, y = combined$state_name),
+			  .f = ~str_equal(..1, ..2))
+ind2 <- which(temp2 == FALSE)
+combined %>% slice(ind2) %>% select(name, state, state_code, state_name)
+```
+
+We remove the 4 observations with inconsistent information.
+```{r}
+combined <- combined %>% slice(-ind2) %>% select(-state_name)
+combined
+```
+
+We want to find the modal value(s) for the percent of student body in STEM:
+```{r}
+mmode(combined$stem_percent)
+```
+
+We can see that the modes are 0 and 7.
+
+### Data Visualization
+- Plot 1
+
+
+
+
+
+
+### List of Functions Used
+- `dplyr`: `glimpse()`, `inner_join()`, `select()`, `slice()`
+- `stringr`: `str_equal()`, `str_replace()`
+- `purrr`: `map2()`, `pmap()`
+- `ggplot2`:
+- `omnibus`: `naRows()`, `mmode()`

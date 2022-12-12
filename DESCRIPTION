@@ -26,9 +26,9 @@ Description: An assortment of helper functions for managing data (e.g.,
 	strings), handling missing values (e.g., removing elements/rows across
 	multiple vectors or matrices if any have an NA), and text (e.g.,
 	flushing reports to the console in real-time).
-Depends: 
-Imports:
 Suggests:
+    knitr,
+    rmarkdown
 License: GPL (>=3)
 LazyData: true
 LazyLoad: yes
@@ -36,3 +36,4 @@ URL: https://github.com/adamlilith/omnibus
 BugReports: https://github.com/adamlilith/omnibus
 Encoding: UTF-8
 RoxygenNote: 7.2.1
+VignetteBuilder: knitr
